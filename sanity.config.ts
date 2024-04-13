@@ -12,9 +12,10 @@ import { apiVersion, dataset, projectId, studioUrl } from "@/sanity/lib/api";
 import { locate } from "@/sanity/plugins/locate";
 import { pageStructure, singletonPlugin } from "@/sanity/plugins/settings";
 import { assistWithPresets } from "@/sanity/plugins/assist";
-import author from "@/sanity/schemas/documents/author";
-import post from "@/sanity/schemas/documents/post";
 import settings from "@/sanity/schemas/singletons/settings";
+import screenshot from './sanity/schemas/screenshot';
+import post from './sanity/schemas/documents/post';
+import author from './sanity/schemas/documents/author';
 
 export default defineConfig({
   basePath: studioUrl,
@@ -27,6 +28,7 @@ export default defineConfig({
       // Documents
       post,
       author,
+      screenshot
     ],
   },
   plugins: [

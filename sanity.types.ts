@@ -394,6 +394,31 @@ export type SanityAssistSchemaTypeField = {
 };
 export declare const internalGroqTypeReferenceTo: unique symbol;
 
+export type ScreenshotsQueryResult = {
+  _id: string;
+  _type: "screenshot";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: {
+    _type: "slug";
+    current?: string;
+    source?: string;
+  }
+  image?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  };
+} | null;
+
 // Source: sanity/lib/queries.ts
 // Variable: settingsQuery
 // Query: *[_type == "settings"][0]
