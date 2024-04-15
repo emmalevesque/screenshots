@@ -49,6 +49,7 @@ export default defineType({
       type: "array",
       
       options: {
+        // @ts-ignore
         embeddingsIndex: true
       },
       of: [

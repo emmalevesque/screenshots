@@ -36,15 +36,7 @@ export default defineConfig({
       screenshot,
     ],
   },
-  studio: {
-    components: {
-      toolMenu: ({children}) => (
-        <Text as="div">
-          {children}
-        </Text>
-      )
-    }
-  },
+  
   plugins: [
     embeddingsIndexDashboard(),
     structureTool({structure: pageStructure([settings])}),
