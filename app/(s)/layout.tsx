@@ -1,24 +1,21 @@
 import "../globals.css";
 
-import { SpeedInsights } from "@vercel/speed-insights/next";
-import type { Metadata } from "next";
-import {
-  VisualEditing,
-  toPlainText,
-  type PortableTextBlock,
-} from "next-sanity";
-import { Inter } from "next/font/google";
-import { draftMode } from "next/headers";
-import { Suspense } from "react";
+import {SpeedInsights} from "@vercel/speed-insights/next";
+import type {Metadata} from "next";
+import {VisualEditing, toPlainText, type PortableTextBlock} from "next-sanity";
+import {Inter} from "next/font/google";
+import {draftMode} from "next/headers";
+import {Fragment, Suspense} from "react";
 
 import AlertBanner from "./alert-banner";
 import PortableText from "./portable-text";
 
-import type { SettingsQueryResult } from "@/sanity.types";
+import type {SettingsQueryResult} from "@/sanity.types";
 import * as demo from "@/sanity/lib/demo";
-import { sanityFetch } from "@/sanity/lib/fetch";
-import { settingsQuery } from "@/sanity/lib/queries";
-import { resolveOpenGraphImage } from "@/sanity/lib/utils";
+import {sanityFetch} from "@/sanity/lib/fetch";
+import {settingsQuery} from "@/sanity/lib/queries";
+import {resolveOpenGraphImage} from "@/sanity/lib/utils";
+import Link from "next/link";
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await sanityFetch<SettingsQueryResult>({
@@ -57,6 +54,28 @@ const inter = Inter({
   display: "swap",
 });
 
+function Intro(props: {title: string | null | undefined; description: any}) {
+  const title = props.title || demo.title;
+  const description = props.description?.length ? props.description : "";
+  return (
+    <Fragment>
+    <section className="fixed top-0 left-0 p-8">
+      <h1 className="prose-lg text-lg font-medium">
+        <Link href="/">{title || ""}</Link>
+      </h1>
+      </section>
+      <section className='fixed bottom-0 right-0 p-8'>
+      <h2 className="text-pretty font-extralight">
+        <PortableText
+          className="prose-lg"
+          value={description?.length ? description : ""}
+        />
+      </h2>
+    </section>
+    </Fragment>
+  );
+}
+
 async function Footer() {
   const data = await sanityFetch<SettingsQueryResult>({
     query: settingsQuery,
@@ -64,56 +83,47 @@ async function Footer() {
   const footer = data?.footer || [];
 
   return (
-    <footer className="bg-accent-1 border-accent-2 border-t">
-      <div className="container mx-auto px-5">
+    <footer className="bg-accent-1 border-accent-2 border-t min-h-screen flex justify-center place-items-center w-full">
+      <div className="">
         {footer.length > 0 ? (
           <PortableText
-            className="prose-sm text-pretty bottom-0 w-full max-w-none bg-white py-12 text-center md:py-20"
+            className="prose-sm text-pretty bottom-0 w-full max-w-none bg-white py-12 text-center md:py-10"
             value={footer as PortableTextBlock[]}
           />
         ) : (
-          <div className="flex flex-col items-center py-28 lg:flex-row">
-            <h3 className="mb-10 text-center text-4xl font-bold leading-tight tracking-tighter lg:mb-0 lg:w-1/2 lg:pr-4 lg:text-left lg:text-5xl">
-              Built with Next.js.
-            </h3>
-            <div className="flex flex-col items-center justify-center lg:w-1/2 lg:flex-row lg:pl-4">
-              <a
-                href="https://nextjs.org/docs"
-                className="mx-3 mb-6 border border-black bg-black py-3 px-12 font-bold text-white transition-colors duration-200 hover:bg-white hover:text-black lg:mb-0 lg:px-8"
-              >
-                Read Documentation
-              </a>
-              <a
-                href="https://github.com/vercel/next.js/tree/canary/examples/cms-sanity"
-                className="mx-3 font-bold hover:underline"
-              >
-                View on GitHub
-              </a>
-            </div>
-          </div>
+          <span className="text-prose"></span>
         )}
       </div>
     </footer>
   );
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const settings = await sanityFetch<SettingsQueryResult>({
+    query: settingsQuery,
+  });
   return (
     <html lang="en" className={`${inter.variable} bg-white text-black`}>
-      <body>
-        <section className="min-h-screen">
-          {draftMode().isEnabled && <AlertBanner />}
-          <main>{children}</main>
-          <Suspense>
-            <Footer />
-          </Suspense>
-        </section>
-        {draftMode().isEnabled && <VisualEditing />}
-        <SpeedInsights />
+      <body className="">
+        <main className="mx-auto min-h-screen flex justify-center items-center">
+          {/* <Intro
+            title={settings?.title || ""}
+            description={settings?.description}
+          /> */}
+          <section className="min-h-screen">
+            {draftMode().isEnabled && <AlertBanner />}
+            <main>{children}</main>
+            {/* <Suspense>
+              <Footer />
+            </Suspense> */}
+          </section>
+          {draftMode().isEnabled && <VisualEditing />}
+          <SpeedInsights />
+        </main>
       </body>
     </html>
   );

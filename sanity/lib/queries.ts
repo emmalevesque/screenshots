@@ -2,7 +2,9 @@ import { groq } from "next-sanity";
 
 export const settingsQuery = groq`*[_type == "settings"][0]`;
 
-export const screenshotsQuery = groq`*[_type == "screenshot"][0]`;
+export const latestScreenshotsQuery = groq`*[_type == "screenshot"] | order(_createdAt desc)[0...20]`;
+
+export const screenshotQuery = groq`*[_type == "screenshot" && title.current == $slug][0]`;
 
 const postFields = /* groq */ `
   _id,

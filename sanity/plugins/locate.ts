@@ -15,7 +15,7 @@ const homeLocation = {
 export const locate: DocumentLocationResolver = (params, context) => {
   if (params.type === "settings") {
     const doc$ = context.documentStore.listenQuery(
-      `*[_type == "post" && defined(slug.current)]{title,slug}`,
+      `*[_type == "screenshot" && defined(title.current)]{title,slug}`,
       {},
       { perspective: "previewDrafts" },
     ) as Observable<

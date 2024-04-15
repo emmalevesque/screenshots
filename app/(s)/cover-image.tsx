@@ -1,22 +1,24 @@
 import { Image } from "next-sanity/image";
 
 import { urlForImage } from "@/sanity/lib/utils";
+import { useRef } from 'react';
 
 interface CoverImageProps {
   image: any;
   priority?: boolean;
+  sizes?: string;
 }
 
 export default function CoverImage(props: CoverImageProps) {
-  const { image: source, priority } = props;
+  const { image: source, priority, sizes = "100vw" } = props;
   const image = source?.asset?._ref ? (
     <Image
-      className="h-auto w-full"
+      className="static"
       width={2000}
-      height={1000}
+      height={2000}
       alt={source?.alt || ""}
-      src={urlForImage(source)?.height(1000).width(2000).url() as string}
-      sizes="100vw"
+      src={urlForImage(source)?.height(2000).dpr(2).url() as string}
+      sizes={sizes}
       priority={priority}
     />
   ) : (
